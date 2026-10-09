@@ -1,0 +1,31 @@
+diff --git a/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp b/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
+index 16c2a415d6..82c1f37199 100644
+--- a/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
++++ b/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
+@@ -821,7 +821,25 @@ MediaResult FFmpegVideoDecoder<LIBAV_VER>::InitV4L2Decoder() {
+     return ret;
+   }
+ 
+-  if (mLib->avcodec_open2(mCodecContext, codec, nullptr) < 0) {
++  AVDictionary* v4l2Options = nullptr;
++
++  int optionResult =
++      mLib->av_dict_set(&v4l2Options, "num_capture_buffers", "32", 0);
++
++  if (optionResult < 0) {
++    mLib->av_dict_free(&v4l2Options);
++    FFMPEG_LOG("  Failed to set V4L2 num_capture_buffers=32");
++    return NS_ERROR_DOM_MEDIA_FATAL_ERR;
++  }
++
++  FFMPEG_LOG("  Requesting 32 V4L2 capture buffers");
++
++  int v4l2OpenResult =
++      mLib->avcodec_open2(mCodecContext, codec, &v4l2Options);
++
++  mLib->av_dict_free(&v4l2Options);
++
++  if (v4l2OpenResult < 0) {
+     FFMPEG_LOG("  Couldn't initialise V4L2 decoder");
+     return NS_ERROR_DOM_MEDIA_FATAL_ERR;
+   }
