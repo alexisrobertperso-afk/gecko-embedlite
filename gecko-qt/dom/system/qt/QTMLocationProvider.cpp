@@ -8,7 +8,10 @@
 
 using namespace mozilla;
 
+// Qt6 QtPositioning declares this metatype itself.
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 Q_DECLARE_METATYPE(QGeoPositionInfo)
+#endif
 
 NS_IMPL_ISUPPORTS(QTMLocationProvider, nsIGeolocationProvider)
 
