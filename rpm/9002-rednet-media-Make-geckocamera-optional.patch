@@ -1,0 +1,29 @@
+From d4f65626335eb417d778295f89b6bbd756100dbb Mon Sep 17 00:00:00 2001
+From: Alexis Robert <alexisrobert.perso@gmail.com>
+Date: Thu, 29 Oct 2026 09:04:14 +0100
+Subject: [PATCH] Make geckocamera optional
+
+Desktop Linux has no Sailfish camera library: WebRTC falls back to its V4L2 capture module and media decoding to Gecko's decoders.
+---
+ toolkit/moz.configure | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index c4ce9d74a0..b951f433dd 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -3498,8 +3498,10 @@ embedlite = depends_if("--with-embedlite")(lambda _: True)
+ set_config("MOZ_EMBEDLITE", embedlite)
+ set_define("MOZ_EMBEDLITE", embedlite)
+ 
++# Sailfish's camera library. Optional: without it, WebRTC keeps its Linux
++# V4L2 capture and media decoding keeps Gecko's own decoders.
+ geckocamera = pkg_check_modules(
+-    "LIBGECKOCAMERA", "geckocamera", when=webrtc & embedlite
++    "LIBGECKOCAMERA", "geckocamera", when=webrtc & embedlite, allow_missing=True
+ )
+ 
+ set_config("MOZ_ENABLE_WEBRTC_GECKOCAMERA", True, when=geckocamera)
+-- 
+2.56.0
+

@@ -1,0 +1,49 @@
+From 6d406b04fed1fb2ccc33844d4102c764c87b4cc5 Mon Sep 17 00:00:00 2001
+From: Alexis Robert <alexisrobert.perso@gmail.com>
+Date: Thu, 29 Oct 2026 09:04:05 +0100
+Subject: [PATCH] Build the Qt layer against Qt6
+
+REDNET BROWSER targets desktop Linux with Qt 6.
+---
+ toolkit/moz.configure | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index a8a231f024..c4ce9d74a0 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -604,13 +604,13 @@ with only_when(toolkit_qt):
+     qt_base = pkg_check_modules(
+         "MOZ_QT_BASE",
+         [
+-            "Qt5Core",
+-            "Qt5Gui",
+-            "Qt5Network",
+-            "Qt5Positioning",
+-            "Qt5PrintSupport",
+-            "Qt5Quick",
+-            "Qt5Widgets",
++            "Qt6Core",
++            "Qt6Gui",
++            "Qt6Network",
++            "Qt6Positioning",
++            "Qt6PrintSupport",
++            "Qt6Quick",
++            "Qt6Widgets",
+             "gio-unix-2.0",
+             "glib-2.0",
+             "gobject-2.0",
+@@ -647,8 +647,8 @@ with only_when(toolkit_qt):
+     set_config("MOZ_ENABLE_QT5GEOPOSITION", True)
+     set_define("MOZ_ENABLE_QT5GEOPOSITION", True)
+ 
+-    check_prog("MOC", ("moc-qt5", "moc"))
+-    check_prog("RCC", ("rcc-qt5", "rcc"))
++    check_prog("MOC", ("moc-qt6", "moc"))
++    check_prog("RCC", ("rcc-qt6", "rcc"))
+ 
+ 
+ @depends(toolkit_gtk, full_toolkit)
+-- 
+2.56.0
+
