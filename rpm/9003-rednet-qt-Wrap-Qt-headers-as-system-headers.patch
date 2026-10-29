@@ -1,0 +1,66 @@
+From 4e62f177344171f1b298dd23290c213a93d95c57 Mon Sep 17 00:00:00 2001
+From: Alexis Robert <alexisrobert.perso@gmail.com>
+Date: Thu, 29 Oct 2026 10:03:00 +0100
+Subject: [PATCH] Wrap Qt headers as system headers
+
+Gecko compiles under '#pragma GCC visibility push(hidden)' and only wraps known system headers back to default visibility. Clang rejects Qt's exported classes declared under the hidden pragma ('visibility does not match previous declaration'); GCC, used by Sailfish, tolerates it. List the Qt headers that Gecko, gecko-qt and EmbedLite include.
+---
+ config/system-headers.mozbuild | 42 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
+index 34d8245c5c..bd1231c282 100644
+--- a/config/system-headers.mozbuild
++++ b/config/system-headers.mozbuild
+@@ -1257,6 +1257,48 @@ if CONFIG["OS_TARGET"] == "Android":
+         "vr/gvr/capi/include/gvr.h",
+     ]
+ 
++# Qt headers are system headers: wrapping them keeps their declarations at
++# default visibility, as Qt's own exported classes expect (clang rejects the
++# mismatch with gcc_hidden.h otherwise).
++if CONFIG["MOZ_WIDGET_TOOLKIT"] == "qt":
++    system_headers += [
++        "QAbstractEventDispatcher",
++        "QByteArray",
++        "QColor",
++        "QCoreApplication",
++        "QDebug",
++        "QDesktopServices",
++        "QEvent",
++        "QFeedbackEffect",
++        "QFont",
++        "QGeoPositionInfoSource",
++        "QGuiApplication",
++        "QIcon",
++        "QObject",
++        "QPageLayout",
++        "QPalette",
++        "QPixmap",
++        "QRect",
++        "QRectF",
++        "QScreen",
++        "QSharedPointer",
++        "QString",
++        "QStringList",
++        "QTemporaryFile",
++        "QThread",
++        "QTimer",
++        "QTransform",
++        "QUrl",
++        "QWindow",
++        "Qt",
++        "qabstracteventdispatcher.h",
++        "qevent.h",
++        "qfontinfo.h",
++        "qobject.h",
++        "qsocketnotifier.h",
++        "qthread.h",
++    ]
++
+ if CONFIG["MOZ_SYSTEM_GBM"]:
+     system_headers += [
+         "gbm.h",
+-- 
+2.56.0
+

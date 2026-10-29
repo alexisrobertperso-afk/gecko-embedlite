@@ -1,0 +1,65 @@
+From a71f86c95dca861d3b7d8c213c0abd194e0e9a3e Mon Sep 17 00:00:00 2001
+From: Alexis Robert <alexisrobert.perso@gmail.com>
+Date: Thu, 29 Oct 2026 10:03:02 +0100
+Subject: [PATCH] Keep WebRTC PipeWire camera capture GTK only
+
+Like patch 0054 for PipeWire: on Qt builds the camera portal and PipeWire capture are not linked, so video capture uses V4L2 directly.
+---
+ .../video_capture/video_capture_internal_impl_gn/moz.build  | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/third_party/libwebrtc/modules/video_capture/video_capture_internal_impl_gn/moz.build b/third_party/libwebrtc/modules/video_capture/video_capture_internal_impl_gn/moz.build
+index 5b0e60ba5e..c054dc956d 100644
+--- a/third_party/libwebrtc/modules/video_capture/video_capture_internal_impl_gn/moz.build
++++ b/third_party/libwebrtc/modules/video_capture/video_capture_internal_impl_gn/moz.build
+@@ -204,6 +204,7 @@ if CONFIG["TARGET_CPU"] == "loongarch64":
+ if (
+     CONFIG["TARGET_CPU"] == "mips32"
+     and not CONFIG["MOZ_ENABLE_WEBRTC_GECKOCAMERA"]
++    and CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk"
+ ):
+ 
+     DEFINES["MIPS32_LE"] = True
+@@ -226,6 +227,7 @@ if (
+ if (
+     CONFIG["TARGET_CPU"] == "mips64"
+     and not CONFIG["MOZ_ENABLE_WEBRTC_GECKOCAMERA"]
++    and CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk"
+ ):
+ 
+     DEFINES["WEBRTC_USE_PIPEWIRE"] = True
+@@ -281,6 +283,7 @@ if (
+     CONFIG["OS_TARGET"] == "Linux"
+     and CONFIG["TARGET_CPU"] == "aarch64"
+     and not CONFIG["MOZ_ENABLE_WEBRTC_GECKOCAMERA"]
++    and CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk"
+ ):
+ 
+     DEFINES["WEBRTC_USE_PIPEWIRE"] = True
+@@ -302,6 +305,7 @@ if (
+     CONFIG["OS_TARGET"] == "Linux"
+     and CONFIG["TARGET_CPU"] == "arm"
+     and not CONFIG["MOZ_ENABLE_WEBRTC_GECKOCAMERA"]
++    and CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk"
+ ):
+ 
+     DEFINES["WEBRTC_USE_PIPEWIRE"] = True
+@@ -323,6 +327,7 @@ if (
+     CONFIG["OS_TARGET"] == "Linux"
+     and CONFIG["TARGET_CPU"] == "x86"
+     and not CONFIG["MOZ_ENABLE_WEBRTC_GECKOCAMERA"]
++    and CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk"
+ ):
+ 
+     CXXFLAGS += [
+@@ -348,6 +353,7 @@ if (
+     CONFIG["OS_TARGET"] == "Linux"
+     and CONFIG["TARGET_CPU"] == "x86_64"
+     and not CONFIG["MOZ_ENABLE_WEBRTC_GECKOCAMERA"]
++    and CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk"
+ ):
+ 
+     DEFINES["WEBRTC_USE_PIPEWIRE"] = True
+-- 
+2.56.0
+
